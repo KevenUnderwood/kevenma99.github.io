@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          马博 | Blog
+          [CTF] CTF(1) MD5之守株待兔 - 马博 | Blog
         
     </title>
 
-    <link rel="canonical" href="http://yoursite.com/">
+    <link rel="canonical" href="http://www.huweihuang.com/article/CTF1/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -71,8 +71,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/header_img/home.jpg') 
-            /*config*/
+            background-image: url('/img/article_header/article_header.png')
+            /*post*/
         
     }
     
@@ -89,10 +89,18 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="site-heading">
-                        <h1>Keven Ma</h1>
-                        <!--<hr class="small">-->
-                        <span class="subheading">个人博客</span>
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#CTF" title="CTF">CTF</a>
+                            
+                        </div>
+                        <h1>[CTF] CTF(1) MD5之守株待兔</h1>
+                        <h2 class="subheading">CTF练习题</h2>
+                        <span class="meta">
+                            Posted by 马博 on
+                            2019-04-28
+                        </span>
                     </div>
                 
 
@@ -195,197 +203,188 @@
 
 
     <!-- Main Content -->
-    <!-- Main Content -->
-<div class="container">
-    <div class="row">
-        
+    <!-- Modify by Yu-Hsuan Yen -->
 
-<!-- USE SIDEBAR -->
-    <!-- Post Container -->
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                post-container
-            ">
-            
-                <!-- Main Content -->
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
+                <h1 id="题目描述">题目描述</h1>
+<blockquote>
+<p>从系统锁下手，通过get方式key字段提交答案，直到您的钥匙与系统锁相等则成功。</p>
+<p>格式：CTF{}</p>
+<p>解题链接： <a href="http://ctf5.shiyanbar.com/misc/keys/keys.php" target="_blank" rel="noopener">http://ctf5.shiyanbar.com/misc/keys/keys.php</a></p>
+</blockquote>
+<h1 id="题目解析">题目解析</h1>
+<p><img src="/img/CTF/CTF1-1.png" alt="avatar"></p>
+<ol>
+<li>打开网页发现有一个false字符串（在解题时我们会用到）</li>
+<li>每次刷新发现系统密钥一直在变化，这使我想到了它可能是一个时间戳<br>
+(不懂时间戳的请戳<a href="https://baike.baidu.com/item/unix%E6%97%B6%E9%97%B4%E6%88%B3/2078227?fr=aladdin" target="_blank" rel="noopener">这里</a>)</li>
+<li>您的密钥一直不变</li>
+</ol>
+<h1 id="写脚本之前对该题的猜想">写脚本之前对该题的猜想</h1>
+<p>该题目应该是让我Get一个经过MD5加密的时间戳和它给出的时间戳相等即可</p>
+<h1 id="撸脚本时间python">撸脚本时间(Python)</h1>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import time</span><br><span class="line">url =&quot;http://ctf5.shiyanbar.com/misc/keys/keys.php&quot;</span><br><span class="line">key_time =int(time.time())+10</span><br><span class="line">url =&quot;http://ctf5.shiyanbar.com/misc/keys/keys.php?key=&quot;+str(key_time)</span><br><span class="line">while 1:</span><br><span class="line">        res = requests.get(url)</span><br><span class="line">        print (res.text)</span><br><span class="line">        if &apos;false&apos;  not in res.text:  //这里用到了网页中的false进行判断</span><br><span class="line">            break</span><br></pre></td></tr></table></figure>
+<h1 id="得到结果">得到结果</h1>
+<blockquote>
+<p>flag{c04ffec18156c696}<br>
+<img src="/img/CTF/CTF1-2.png" alt="avatar"></p>
+</blockquote>
 
-<div class="post-preview">
+                
 
-    <a href="/2019/04/28/CTF1/">
-        <h2 class="post-title">
-            [CTF] CTF(1) MD5之守株待兔
-        </h2>
-        <h3 class="post-subtitle">
-            CTF练习题
-        </h3>
-        <div class="post-content-preview">
-            题目描述
-
-从系统锁下手，通过get方式key字段提交答案，直到您的钥匙与系统锁相等则成功。
-格式：CTF{}
-解题链接： http://ctf5.shiyanbar.com/misc/keys/keys.php
-
-题目解析
-
-
-打开网页发现有一个false字符串（在解题时我们会用到）
-每次刷新发现系统密钥一直在变化，这使我想到了它可能是一个时间戳
-(不懂时间戳的请戳这里)
-您的密钥一直不变...
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by 马博 on
-            2019-04-28
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#CTF" title="CTF">CTF</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    
-</ul>
-
-
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                </ul>
 
                 <br>
 
+                <!--打赏-->
+                
+                    <div class="reward">
+                        <div class="reward-button">赏 <span class="reward-code"> 
+                            <span class="alipay-code"> <img class="alipay-img" src="/img/pay/alipay.jpg"><b>支付宝打赏</b></span> 
+                            <span class="wechat-code"> <img class="wechat-img" src="/img/pay/wechatpay.jpg"><b>微信打赏</b> </span>
+                            </span></div>
+                        <p class="reward-notice">赞赏一下</p>
+                    </div>
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
                 <!-- require APlayer -->
                 
 
-                <!-- 如果开启评论功能 -->
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#题目描述"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x9898;&#x76EE;&#x63CF;&#x8FF0;</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#题目解析"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x9898;&#x76EE;&#x89E3;&#x6790;</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#写脚本之前对该题的猜想"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#x5199;&#x811A;&#x672C;&#x4E4B;&#x524D;&#x5BF9;&#x8BE5;&#x9898;&#x7684;&#x731C;&#x60F3;</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#撸脚本时间python"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#x64B8;&#x811A;&#x672C;&#x65F6;&#x95F4;(Python)</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#得到结果"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">&#x5F97;&#x5230;&#x7ED3;&#x679C;</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#CTF" title="CTF">CTF</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="" target="_blank">CSDN Blog MABO</a></li>
+                    
+                </ul>
                 
             </div>
-
-          <!-- Sidebar Container -->
-<div class="
-    col-lg-3 col-lg-offset-0
-    col-md-3 col-md-offset-0
-    col-sm-12
-    col-xs-12
-    sidebar-container
-">
-    
-        <!-- Featured Tags -->
-
-<section>
-    <!-- no hr -->
-    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-    <div class="tags">
-        
-            
-        
+        </div>
     </div>
-</section>
+</article>
 
-        <hr>
-    
-        <!-- Short About -->
-<section class="visible-md visible-lg">
-    <h5><a href="/about/">ABOUT ME</a></h5>
-    <div class="short-about">
 
-        
-            <img id = "avatar_pic" src="/img/avatar/ironman.png" />
-        
 
-        
-            <p>Stay hungry,Stay foolish</p>
-        
 
-        <!-- SNS Link -->
-        <ul class="list-inline">
-            
-            
-            
 
-            
-                <li>
-                    <a target="_blank" href="http://weibo.com/Keven-Ma">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
 
-            
 
-            
-                <li>
-                    <a target="_blank"  href="https://github.com/kevenma99">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-            
-            
-            
-        </ul>
-    </div>
-</section>
 
-        <hr>
-    
-        
-  <h5>RECENT POSTS</h3>
-  <div class="widget">
-    <ul>
-      
-        <li>
-          <a href="/2019/04/28/CTF1/">[CTF] CTF(1) MD5之守株待兔</a>
-        </li>
-      
-    </ul>
-  </div>
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
-        <hr>
-    
-        <!-- Friends Blog -->
-
-<h5>FRIENDS</h5>
-<ul class="list-inline">
-
-    
-        <li><a href="" target="_blank">CSDN Blog MABO</a></li>
-    
-</ul>
-
-        <hr>
-    
-        
-    <h5>ARCHIVES</h5>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-
-        <hr>
-    
-</div>
-
-        
-    </div>
-</div>
 
 
     <!-- Footer -->
@@ -400,21 +399,12 @@
                 
 
                 
-                    <li>
-                        <a target="_blank" href="http://weibo.com/Keven-Ma">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
-                
 
                 
 
                 
                     <li>
-                        <a target="_blank"  href="https://github.com/kevenma99">
+                        <a target="_blank"  href="https://github.com/kevenmama">
                             <span class="fa-stack fa-lg">
                                 <i class="fa fa-circle fa-stack-2x"></i>
                                 <i class="fa fa-github fa-stack-1x fa-inverse"></i>
@@ -491,7 +481,7 @@
 <script>
     // only load tagcloud.js in tag.html
     if($('#tag_cloud').length !== 0){
-        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+        async("http://www.huweihuang.com/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
                 //size: {start: 1, end: 1, unit: 'em'},
                 color: {start: '#bbbbee', end: '#0085a1'},
@@ -513,9 +503,39 @@
 <!-- Google Analytics -->
 
 
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
 
 
 <!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
 
 
 
@@ -526,7 +546,7 @@
 	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
     <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
 <!-- Image to hack wechat -->
-<img src="http://yoursite.com/img/icon_wechat.png" width="0" height="0" />
+<img src="http://www.huweihuang.com/img/icon_wechat.png" width="0" height="0" />
 <!-- Migrate from head to bottom, no longer block render and still work -->
 
 </body>
